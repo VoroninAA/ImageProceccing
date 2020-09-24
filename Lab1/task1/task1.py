@@ -42,8 +42,8 @@ def calculate_ssim(img1, img2):
         raise ValueError('Wrong input image dimensions.')
 
 
-img2 = cv2.imread("44.jpg", 1)
-img = cv2.imread("images3.jpg", 1)
+img2 = cv2.imread("firstimage.jpg", 1)
+img = cv2.imread("secondimage.jpg", 1)
 print(calculate_ssim(img, img2))
 
 cv2.imshow('image', img)
