@@ -3,8 +3,10 @@ import numpy as np
 import math
 from PIL import Image
 import sys
+
+from Lab1.task1 import task1
+
 sys.path.insert(0, '..\task1\task1')
-import task1
 
 def my_average(img, img2):
     width, height = img.size
