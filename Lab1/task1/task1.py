@@ -47,4 +47,4 @@ img = cv2.imread("secondimage.jpg", 1)
 print(calculate_ssim(img, img2))
 
 cv2.imshow('image', img)
-cv2.waitKey(5000)
+cv2.waitKey(10000)
