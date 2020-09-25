@@ -2,11 +2,7 @@ import cv2
 import numpy as np
 import math
 from PIL import Image
-import sys
-
-from Lab1.task1 import task1
-
-sys.path.insert(0, '..\task1\task1')
+from Lab1.task1.metrics import *
 
 def my_average(img, img2):
     width, height = img.size
@@ -20,10 +16,17 @@ img = Image.open("firstimage.jpg")
 img.show()
 img2 = img
 my_average(img, img2)
+opencvImage2 = cv2.cvtColor(np.array(img2), cv2.COLOR_RGB2BGR)  #convert from PIL to cv2
+cv2.imshow('my_averange', opencvImage2)
 
 img3 = cv2.imread("firstimage.jpg")
-img3 = cv2.cvtColor(img3, cv2.COLOR_BGR2GRAY)
+gray = cv2.cvtColor(img3, cv2.COLOR_BGR2GRAY)
+img3 = np.zeros_like(img)
+img3[:,:,0] = gray
+img3[:,:,1] = gray
+img3[:,:,2] = gray
+cv2.imshow('cv_GrayScale', img3)
 
-img2.show()
-cv2.imshow('image', img3)
+print(calculate_ssim(opencvImage2, img3))
+print(PSNR(opencvImage2, img3))
 cv2.waitKey()
