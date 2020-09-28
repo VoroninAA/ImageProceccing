@@ -18,7 +18,6 @@ img2 = img
 my_average(img, img2)
 opencvImage2 = cv2.cvtColor(np.array(img2), cv2.COLOR_RGB2BGR)  #convert from PIL to cv2
 cv2.imshow('my_averange', opencvImage2)
-
 img3 = cv2.imread("firstimage.jpg")
 gray = cv2.cvtColor(img3, cv2.COLOR_BGR2GRAY)
 img3 = np.zeros_like(img)
@@ -29,4 +28,5 @@ cv2.imshow('cv_GrayScale', img3)
 
 print(calculate_ssim(opencvImage2, img3))
 print(PSNR(opencvImage2, img3))
+print("Изображения практически не отличаются")
 cv2.waitKey()
