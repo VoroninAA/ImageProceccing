@@ -1,7 +1,4 @@
 import cv2
-import numpy as np
-import math
-from PIL import Image
 from Lab1.task1.metrics import *
 
 
@@ -118,8 +115,7 @@ hsv_cv = cv2.cvtColor(img2, cv2.COLOR_RGB2HSV)
 cv2.imshow('HSV_cv', hsv_cv)
 
 print("Схожесть RGB -> HSV")
-print(calculate_ssim(img, hsv_cv))
-print(PSNR(img, hsv_cv))
+print(psnr(img, hsv_cv))
 
 img3 = img
 my_hsv_2_rgb(img3)
@@ -128,8 +124,7 @@ cv2.imshow("RGB_my", img3)
 rgb_cv = cv2.cvtColor(hsv_cv, cv2.COLOR_HSV2RGB)
 cv2.imshow("RGB_cv", rgb_cv)
 print("Схожесть HSV -> RGB")
-print(calculate_ssim(rgb_cv, img3))
-print(PSNR(rgb_cv, img3))
+print(psnr(rgb_cv, img3))
 
 brightness_rgb(img3, 150)
 cv2.imshow("brightness_my", img3)
