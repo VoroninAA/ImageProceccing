@@ -1,6 +1,9 @@
-import cv2
-from Lab1.task1.metrics import *
 import time
+
+import cv2
+
+from Lab1.task1.metrics import *
+
 
 def my_rgb_2_hsv(src):
     width = src.shape[0]
@@ -31,7 +34,7 @@ def my_rgb_2_hsv(src):
             if Cmax == 0:
                 S = 0
             else:
-                S = delta/Cmax
+                S = delta / Cmax
 
             V = Cmax
 
@@ -100,6 +103,7 @@ def brightness_hsv(src, value):
             V = max(0, min(V + value, 255))
 
             src[x, y, 2] = V
+
 
 # shows source image
 img = cv2.imread("img.jpg")

@@ -1,5 +1,8 @@
-import numpy as np
 import math
+
+import numpy as np
+
+
 def psnr(original, compressed):
     if not original.shape == compressed.shape:
         raise ValueError('Input images must have the same dimensions.')
@@ -9,4 +12,3 @@ def psnr(original, compressed):
     max_pixel = 255.0
     result = 20 * math.log10(max_pixel / math.sqrt(mse))
     return result
-
