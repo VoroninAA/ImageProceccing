@@ -6,3 +6,10 @@
   [**Задания**](https://drive.google.com/drive/folders/1Aq4E_vmv7o4K_jduoV69icJP88PyicT8?usp=sharing)
   
   Почта для сдачи: nosova.sv.a@gmail.com
+  
+Лабораторную работу выполнили:
+**Кустова Анастасия,
+Чесноков Артем,
+Воронин Алексей**
+
+Группа 381808-1
