@@ -1,13 +1,13 @@
 import cv2
+import numpy as np
 
-from Lab1.task1.metrics import *
+from ImageProceccing.Lab1.task1.metrics import *
 
 # TODO  refactor noise generation as im not sure if its right
 
 def show_two_images(source_image, noised_image):
     cv2.imshow('Result Image ', source_image)
     cv2.imshow('Noised Image', noised_image)
-    cv2.waitKey(3000)
 
 
 def gaussian_noise(sourceimage):
@@ -22,4 +22,7 @@ def gaussian_noise(sourceimage):
 if __name__ == "__main__":
     image = cv2.imread('../images/testimage.jpg', 0)
     noised_image = gaussian_noise(image)
-    show_two_images(image, noised_image)
+    cv2.imshow('source_image', image)
+    cv2.imshow('noised_image', noised_image)
+    cv2.waitKey(3000)
+

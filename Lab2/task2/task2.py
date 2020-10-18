@@ -1,42 +1,54 @@
 import copy
 
-from Lab2.task1.task1 import *
-
+from ImageProceccing.Lab2.task1.task1 import *
+from PIL import Image
 
 def get_possible_value(cur, min, max):
     if cur < min:
-        return min
+        return round(min)
     if cur > max:
-        return max
-    return cur
+        return round(max)
+    return round(cur)
 
 
 def process_image(source_image, processing_type):
-    processing_image = copy.copy(source_image)
+    processing_image = source_image
+    width, height = processing_image.size
     if processing_type == 1:
-        for i in range(0, processing_image.shape[0] - 1):
-            for j in range(0, processing_image.shape[1] - 1):
-                processing_image[i, j] = get_median(processing_image, i, j)
+        for i in range(width):
+            for j in range(height):
+                processing_image.putpixel((i, j), (get_median(processing_image, i, j)))
     else:
-        for i in range(0, processing_image.shape[0] - 1):
-            for j in range(0, processing_image.shape[1] - 1):
-                processing_image[i, j] = gaussian_filter(processing_image, i, j)
+        for i in range(0, width):
+            for j in range(0, height):
+                processing_image.putpixel((i, j), (gaussian_filter(processing_image, i, j)))
     return processing_image
 
 
 def get_median(source_image, x, y):
     radius_x = 3 // 2
     radius_y = 3 // 2
-    result = np.arange(9, dtype=np.uint8)
+    resultR = 0
+    resultG = 0
+    resultB = 0
+    width, height = source_image.size
+    arr_ = []
+    arr = []
     for i in range(-radius_x, radius_x + 1):
         for j in range(-radius_y, radius_y + 1):
-            idX = get_possible_value(x + i, 0, source_image.shape[0] - 1)
-            idY = get_possible_value(y + j, 0, source_image.shape[1] - 1)
-            neighbor_color = source_image[idX, idY];
-            array_pointer = np.uint8(i + radius_x + (j + radius_y) * 3)
-            result[array_pointer] = neighbor_color
-    result.sort()
-    return result[4]
+            idX = get_possible_value(x + i, 0, width - 1)
+            idY = get_possible_value(y + j, 0, height - 1)
+            resultR, resultG, resultB = source_image.getpixel((idX, idY))
+            tmp = (resultR + resultG + resultB) // 3
+            arr.append(tmp)
+            arr_.append((resultR, resultG, resultB))
+    arr.sort()
+    for l in arr_:
+        resultR, resultG, resultB = l
+        tmp = (resultR + resultG + resultB) // 3
+        if (tmp == arr[4]):
+            return (resultR, resultG, resultB)
+    return (0, 0, 0)
 
 
 def get_gaussian_kernel(radius, sigma):
@@ -58,26 +70,36 @@ def get_gaussian_kernel(radius, sigma):
 def gaussian_filter(source_image, x, y):
     radius_x = 3 // 2
     radius_y = 3 // 2
+    width, height = source_image.size
     kernel = get_gaussian_kernel(3, 3)
-    result = 0
+    resultR = 0
+    resultG = 0
+    resultB = 0
     for i in range(-radius_x, radius_x + 1):
         for j in range(-radius_y, radius_y + 1):
-            idX = get_possible_value(x + i, 0, source_image.shape[0] - 1)
-            idY = get_possible_value(y + j, 0, source_image.shape[1] - 1)
-            neighbor_color = source_image[idX, idY]
-            result += neighbor_color * kernel[i + radius_x, j + radius_y]
+            idX = get_possible_value(x + i, 0, width - 1)
+            idY = get_possible_value(y + j, 0, height - 1)
+            neighbor_colorR, neighbor_colorG, neighbor_colorB,  = source_image.getpixel((idX, idY));
+            resultR += neighbor_colorR * kernel[i + radius_x, j + radius_y]
+            resultG += neighbor_colorG * kernel[i + radius_x, j + radius_y]
+            resultB += neighbor_colorB * kernel[i + radius_x, j + radius_y]
 
-    return get_possible_value(result, 0, 255)
+    return get_possible_value(resultR, 0, 255), get_possible_value(resultG, 0, 255), get_possible_value(resultB, 0, 255)
 
 
 if __name__ == "__main__":
-    image = cv2.imread('../images/testimage.jpg', 0)
-    noised_image = gaussian_noise(image)
+    noised_image = Image.open('../images/testimage2.jpg')
+    source_img = cv2.cvtColor(np.array(noised_image), cv2.COLOR_RGB2BGR)  # convert from PIL to cv2
+    cv2.imshow('Source_image', source_img)
 
     # Check the median filter result
     median = process_image(noised_image, 1)
-    show_two_images(median, noised_image)
+    median_img = cv2.cvtColor(np.array(median), cv2.COLOR_RGB2BGR)  # convert from PIL to cv2
+    cv2.imshow('Median_image', median_img)
 
     # Check the gaussian filter result
     gaussian = process_image(noised_image, 2)
-    show_two_images(gaussian, noised_image)
+    gaussian_img = cv2.cvtColor(np.array(gaussian), cv2.COLOR_RGB2BGR)  # convert from PIL to cv2
+    cv2.imshow('Gaussian_image', gaussian_img)
+
+    cv2.waitKey()
