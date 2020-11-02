@@ -2,7 +2,7 @@ import time
 
 import cv2
 
-from Lab1.task1.metrics import *
+from ImageProceccing.Lab1.task1.metrics import *
 
 
 def my_rgb_2_hsv(src):
@@ -106,7 +106,7 @@ def brightness_hsv(src, value):
 
 
 # shows source image
-img = cv2.imread("img.jpg")
+img = cv2.imread("img.png")
 cv2.imshow('original', img)
 
 # shows HSVed by me image
@@ -116,7 +116,7 @@ time_my_HSV = time.time() - start_time_my_HSV
 cv2.imshow('HSV_my', img)
 
 # shows HSVed by CV image
-img2 = cv2.imread("img.jpg")
+img2 = cv2.imread("img.png")
 start_time_cv_HSV = time.time()
 hsv_cv = cv2.cvtColor(img2, cv2.COLOR_RGB2HSV)
 time_cv_HSV = time.time() - start_time_cv_HSV
