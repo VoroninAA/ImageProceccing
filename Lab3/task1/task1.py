@@ -5,6 +5,7 @@ from scipy.ndimage.filters import convolve
 
 
 def canny(img):
+    img = rgb2gray(img)
     img_smoothed = convolve(img, gaussian_kernel(5, 1))
     gradient_mat, theta_mat = sobel_filters(img_smoothed)
     non_max_img = non_max_suppression(gradient_mat, theta_mat)
@@ -115,8 +116,7 @@ def rgb2gray(rgb):
 
 if __name__ == "__main__":
     source_image = cv2.imread('../images/img.jpg', 1)
-    image = rgb2gray(source_image)
-    image_final = canny(image)
+    image_final = canny(source_image)
     cv2.imshow('source image', source_image)
     cv2.imshow('canny algorithm result', np.uint8(image_final))
     cv2.waitKey()
