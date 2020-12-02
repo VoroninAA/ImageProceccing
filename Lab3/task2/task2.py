@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
-from copy import deepcopy
 
 
 def gaussian_smoothing(input_img):
@@ -27,15 +25,12 @@ def canny_edge_detection(input):
     return edges
 
 
-def HoughCircles(input, circles):
+def hough_circles(input, circles):
     rows = input.shape[0]
     cols = input.shape[1]
 
-    # initializing the angles to be computed
-    sinang = dict()
-    cosang = dict()
     # initializing the different radius
-    radius = [i for i in range(10, 70)]             #  МОЖНО МЕНЯТЬ, ЧЕМ МЕНЬШЕ, ТЕМ БЫСТРЕЕ РАБОТАЕТ
+    radius = [i for i in range(10, 70)]  # МОЖНО МЕНЯТЬ, ЧЕМ МЕНЬШЕ, ТЕМ БЫСТРЕЕ РАБОТАЕТ
     # For Generic Images
     # length=int(rows/2)
     # radius = [i for i in range(5,length)]
@@ -55,14 +50,14 @@ def HoughCircles(input, circles):
                     for angle in range(0, 360):
                         b = y - round(r * np.sin(angle * np.pi / 180))
                         a = x - round(r * np.cos(angle * np.pi / 180))
-                        if a >= 0 and a < rows and b >= 0 and b < cols:
+                        if 0 <= a < rows and 0 <= b < cols:
                             acc_cells[a][b] += 1
 
         print('For radius: ', r)
         acc_cell_max = np.amax(acc_cells)
         print('max acc value: ', acc_cell_max)
 
-        if (acc_cell_max > 150):
+        if acc_cell_max > 150:
 
             print("Detecting the circles for radius: ", r)
 
@@ -72,43 +67,43 @@ def HoughCircles(input, circles):
             # find the circles for this radius
             for i in range(rows):
                 for j in range(cols):
-                    if (i > 0 and j > 0 and i < rows - 1 and j < cols - 1 and acc_cells[i][j] >= 150):
+                    if 0 < i < rows - 1 and 0 < j < cols - 1 and acc_cells[i][j] >= 150:
                         avg_sum = np.float32((acc_cells[i][j] + acc_cells[i - 1][j] + acc_cells[i + 1][j] +
                                               acc_cells[i][j - 1] + acc_cells[i][j + 1] + acc_cells[i - 1][j - 1] +
                                               acc_cells[i - 1][j + 1] + acc_cells[i + 1][j - 1] + acc_cells[i + 1][
                                                   j + 1]) / 9)
                         print("Intermediate avg_sum: ", avg_sum)
-                        if (avg_sum >= 33):
+                        if avg_sum >= 33:
                             print("For radius: ", r, "average: ", avg_sum, "\n")
                             circles.append((i, j, r))
                             acc_cells[i:i + 5, j:j + 7] = 0
 
 
 def main():
-    img_path = 'HoughCircles.jpg'
     # sample_inp1_path = 'circle_sample_1.jpg'
 
-    orig_img = cv2.imread('image1.png')
+    orig_img = cv2.imread('../images/image1.png')
     cv2.imshow('source image', orig_img)
-    input_img = cv2.imread('image1.png', cv2.IMREAD_GRAYSCALE)
+    input_img = cv2.imread('../images/image1.png', cv2.IMREAD_GRAYSCALE)
     # 1. Denoise using Gaussian filter and detect edges using canny edge detector
     smoothed_img = gaussian_smoothing(input_img)
-#    cv2.imshow('1', smoothed_img)
+    #    cv2.imshow('1', smoothed_img)
     # 2. Detect Edges using Canny Edge Detector
     edged_image = canny_edge_detection(smoothed_img)
-#    cv2.imshow('2', edged_image)
+    #    cv2.imshow('2', edged_image)
     circles = []
-    HoughCircles(edged_image, circles)
+    hough_circles(edged_image, circles)
 
     # Print the output
     for vertex in circles:
         cv2.circle(orig_img, (vertex[1], vertex[0]), vertex[2], (255, 0, 0), 1)
-   #     cv2.rectangle(orig_img, (vertex[1] - 2, vertex[0] - 2), (vertex[1] - 2, vertex[0] - 2), (0, 0, 255), 3)
+    #     cv2.rectangle(orig_img, (vertex[1] - 2, vertex[0] - 2), (vertex[1] - 2, vertex[0] - 2), (0, 0, 255), 3)
 
     print(circles)
 
     cv2.imshow('Circle Detected Image', orig_img)
     cv2.waitKey()
+
 
 if __name__ == '__main__':
     main()
