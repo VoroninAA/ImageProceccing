@@ -32,10 +32,9 @@ def hough_circles(input, circles):
     cols = input.shape[1]
 
     # initializing the different radius
-    radius = [i for i in range(10, 39)]  # МОЖНО МЕНЯТЬ, ЧЕМ МЕНЬШЕ, ТЕМ БЫСТРЕЕ РАБОТАЕТ
     # For Generic Images
-    # length=int(rows/2)
-    # radius = [i for i in range(5,length)]
+    length=int(rows/2)
+    radius = [i for i in range(5,length)]
 
     # Initial threshold value
     threshold = 190
