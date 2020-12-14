@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from numba import jit
 
 
 def gaussian_smoothing(input_img):
@@ -25,6 +26,7 @@ def canny_edge_detection(input):
     return edges
 
 
+@jit(nopython=True, parallel=True)
 def hough_circles(input, circles):
     rows = input.shape[0]
     cols = input.shape[1]
@@ -62,7 +64,11 @@ def hough_circles(input, circles):
             print("Detecting the circles for radius: ", r)
 
             # Initial threshold
-            acc_cells[acc_cells < 150] = 0
+            # acc_cells[acc_cells < 150] = 0
+            for x in range(rows):
+                for y in range(cols):
+                    if acc_cells[x][y] < 150:
+                        acc_cells[x][y] = 0
 
             # find the circles for this radius
             for i in range(rows):
@@ -91,7 +97,7 @@ def main():
     # 2. Detect Edges using Canny Edge Detector
     edged_image = canny_edge_detection(smoothed_img)
     #    cv2.imshow('2', edged_image)
-    circles = []
+    circles = [(0, 0, 0)]
     hough_circles(edged_image, circles)
 
     # Print the output
@@ -99,7 +105,7 @@ def main():
         cv2.circle(orig_img, (vertex[1], vertex[0]), vertex[2], (255, 0, 0), 1)
     #     cv2.rectangle(orig_img, (vertex[1] - 2, vertex[0] - 2), (vertex[1] - 2, vertex[0] - 2), (0, 0, 255), 3)
 
-    print(circles)
+    print(circles[1:])
 
     cv2.imshow('Circle Detected Image', orig_img)
     cv2.waitKey()
