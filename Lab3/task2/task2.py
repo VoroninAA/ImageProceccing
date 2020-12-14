@@ -32,7 +32,7 @@ def hough_circles(input, circles):
     cols = input.shape[1]
 
     # initializing the different radius
-    radius = [i for i in range(10, 70)]  # МОЖНО МЕНЯТЬ, ЧЕМ МЕНЬШЕ, ТЕМ БЫСТРЕЕ РАБОТАЕТ
+    radius = [i for i in range(10, 39)]  # МОЖНО МЕНЯТЬ, ЧЕМ МЕНЬШЕ, ТЕМ БЫСТРЕЕ РАБОТАЕТ
     # For Generic Images
     # length=int(rows/2)
     # radius = [i for i in range(5,length)]
@@ -85,6 +85,49 @@ def hough_circles(input, circles):
                             acc_cells[i:i + 5, j:j + 7] = 0
 
 
+def analyze(circs, img):
+    rows = img.shape[0]
+    cols = img.shape[1]
+    count = 0
+    for c in circs:
+        count += 1
+        c_x = c[0]
+        c_y = c[1]
+        rad = c[2]
+        r = g = b = 0
+        square = 0
+        perimeter = 0
+        for x in range(rows):
+            for y in range(cols):
+                if (x - c_x)**2 + (y - c_y)**2 <= rad*rad:
+                    square += 1
+                    r += img[x][y][0]
+                    g += img[x][y][1]
+                    b += img[x][y][2]
+
+        _x = 0
+        _y = 0
+        for x in range(rows):
+            for y in range(cols):
+                if (x - c_x)**2 + (y - c_y)**2 <= rad*rad:
+                    _x += x
+                    _y += y
+                    if ((x + 1 - c_x)**2 + (y - c_y)**2 > rad*rad or (x - 1 - c_x)**2 + (y - c_y)**2 > rad*rad
+                        or (x - c_x)**2 + (y + 1 - c_y)**2 > rad*rad or (x - c_x)**2 + (y - 1 - c_y)**2 > rad*rad):
+                        perimeter += 1
+
+        print("For circle #", count)
+        print("X = ", c_x, " Y = ", c_y)
+        print("Radius = ", rad)
+        print("Square = ", square)
+        # always the same for circles
+        print("Center mass = ", (_x/square, _y/square))
+        print("Perimeter = ", perimeter)
+        print("Compact = ", perimeter**2 / square)
+        print("Mean color = ", (r/square, g/square, b/square))
+
+
+
 def main():
     # sample_inp1_path = 'circle_sample_1.jpg'
 
@@ -105,7 +148,8 @@ def main():
         cv2.circle(orig_img, (vertex[1], vertex[0]), vertex[2], (255, 0, 0), 1)
     #     cv2.rectangle(orig_img, (vertex[1] - 2, vertex[0] - 2), (vertex[1] - 2, vertex[0] - 2), (0, 0, 255), 3)
 
-    print(circles[1:])
+    #print(circles[1:])
+    analyze(circles[1:], orig_img)
 
     cv2.imshow('Circle Detected Image', orig_img)
     cv2.waitKey()
