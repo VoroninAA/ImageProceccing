@@ -84,6 +84,7 @@ def hough_circles(input, circles):
                             acc_cells[i:i + 5, j:j + 7] = 0
 
 
+@jit(nopython=True, parallel=True)
 def analyze(circs, img):
     rows = img.shape[0]
     cols = img.shape[1]
